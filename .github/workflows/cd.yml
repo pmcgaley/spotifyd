@@ -16,7 +16,7 @@ jobs:
         os: [linux]
         arch: [aarch64]
         rust: [stable]
-        artifact_type: ['default']  # The build strategy will build all types for each OS specified
+        artifact_type: ['default']  # The build strategy will build all types for each OS specified.
         include:
           # Runner configuration
           - os: macos
