@@ -13,11 +13,11 @@ jobs:
     runs-on: ${{ matrix.runs_on }}
     strategy:
       matrix:
-        os: [linux]
-        arch: [aarch64]
-        rust: [stable]
-        artifact_type: ['default']  # The build strategy will build all types for each OS specified.
-        include:
+       os: [macos, linux]
+       arch: [x86_64, aarch64, armv7]
+       rust: [stable]
+       artifact_type: ['slim', 'default', 'full']  # The build strategy will build all types for each OS specified
+       include:
           # Runner configuration
           - os: macos
             arch: x86_64
@@ -54,7 +54,7 @@ jobs:
           # Audio backend configuration: macOS
           - os: macos
             audio_backends: portaudio_backend,rodio_backend
-        exclude:
+       exclude:
           - os: macos
             artifact_type: 'full'
           - os: macos
