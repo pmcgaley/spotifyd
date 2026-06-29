@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
        os: [macos, linux]
-       arch: [x86_64, aarch64, armv7]
+       arch: [x86_64, aarch64]
        rust: [stable]
        artifact_type: ['slim', 'default', 'full']  # The build strategy will build all types for each OS specified
        include:
