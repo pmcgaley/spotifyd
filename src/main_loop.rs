@@ -13,7 +13,7 @@ use futures::{
     future::{self, Fuse, FusedFuture},
     stream::Peekable,
 };
-use librespot_connect::{ConnectConfig, Spirc};
+use librespot_connect::{ConnectConfig, SavedPlaybackState, Spirc};
 use librespot_core::{
     Error, SessionConfig, authentication::Credentials, cache::Cache, config::DeviceType,
     session::Session,
@@ -91,7 +91,7 @@ pub(crate) struct MainLoop {
     pub(crate) mpris_config: MprisConfig,
 }
 
-struct ConnectionInfo<SpircTask: Future<Output = ()>> {
+struct ConnectionInfo<SpircTask: Future<Output = Option<SavedPlaybackState>>> {
     spirc: Spirc,
     #[cfg_attr(not(feature = "dbus_mpris"), expect(unused))]
     session: Session,
@@ -102,7 +102,7 @@ struct ConnectionInfo<SpircTask: Future<Output = ()>> {
 impl MainLoop {
     async fn get_connection(
         &mut self,
-    ) -> Result<ConnectionInfo<impl Future<Output = ()> + use<>>, Error> {
+    ) -> Result<ConnectionInfo<impl Future<Output = Option<SavedPlaybackState>> + use<>>, Error> {
         let creds = self.credentials_provider.get_credentials().await;
 
         let mut connection_backoff = Backoff::default();
