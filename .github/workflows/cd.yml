@@ -7,6 +7,7 @@ on:
     tags:
       - 'v*.*.*'
 
+
 jobs:
   build:
     name: Building ${{matrix.os}}-${{ matrix.arch }} (${{ matrix.artifact_type }})
@@ -14,15 +15,11 @@ jobs:
     strategy:
       matrix:
        os: [macos, linux]
-       arch: [x86_64, aarch64]
+       arch: [x86_64, aarch64, armv7]
        rust: [stable]
        artifact_type: ['slim', 'default', 'full']  # The build strategy will build all types for each OS specified
        include:
           # Runner configuration
-          - os: linux
-            artifact_type: default
-            audio_backends: alsa_backend,pulseaudio_backend,rodio_backend
-       exclude:
           - os: macos
             arch: x86_64
             runs_on: macos-15-intel
@@ -41,18 +38,28 @@ jobs:
             dbus: dbus_mpris
           - artifact_type: full
             dbus: dbus_mpris
+          # Cross Compilation Targets
+          - os: linux
+            arch: armv7
+            target: armv7-unknown-linux-gnueabihf
           # Audio backend configuration: Linux
           - os: linux
             artifact_type: slim
             audio_backends: alsa_backend
+          - os: linux
+            artifact_type: default
+            audio_backends: alsa_backend,pulseaudio_backend,rodio_backend
           - os: linux
             artifact_type: full
             audio_backends: alsa_backend,pulseaudio_backend,rodio_backend,rodiojack_backend
           # Audio backend configuration: macOS
           - os: macos
             audio_backends: portaudio_backend,rodio_backend
+       exclude:
           - os: macos
             artifact_type: 'full'
+          - os: macos
+            arch: armv7
     steps:
       - name: Checking out sources
         uses: actions/checkout@v4
