@@ -19,6 +19,10 @@ jobs:
        artifact_type: ['slim', 'default', 'full']  # The build strategy will build all types for each OS specified
        include:
           # Runner configuration
+          - os: linux
+            artifact_type: default
+            audio_backends: alsa_backend,pulseaudio_backend,rodio_backend
+       exclude:
           - os: macos
             arch: x86_64
             runs_on: macos-15-intel
@@ -42,15 +46,11 @@ jobs:
             artifact_type: slim
             audio_backends: alsa_backend
           - os: linux
-            artifact_type: default
-            audio_backends: alsa_backend,pulseaudio_backend,rodio_backend
-          - os: linux
             artifact_type: full
             audio_backends: alsa_backend,pulseaudio_backend,rodio_backend,rodiojack_backend
           # Audio backend configuration: macOS
           - os: macos
             audio_backends: portaudio_backend,rodio_backend
-       exclude:
           - os: macos
             artifact_type: 'full'
     steps:
